@@ -1,0 +1,15 @@
+pom.xml
+pom.xml.asc
+*jar
+/lib/
+/classes/
+/target/
+/checkouts/
+.lein-deps-sum
+.lein-repl-history
+.lein-plugins/
+.lein-failures
+.repl/
+.cljs_node_repl/
+node_modules/
+*cljse
