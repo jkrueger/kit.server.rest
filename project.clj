@@ -5,7 +5,7 @@
      [org.clojure/core.async "0.1.338.0-5c5012-alpha"]
      [com.cemerick/piggieback "0.1.5"]
      [mocha-latte "0.1.2"]
-     [chai-latte  "0.2.2-SNAPSHOT"]
+     [chai-latte  "0.3.0-SNAPSHOT"]
      [vupt/kit.core  "0.1.0-SNAPSHOT"]
      [vupt/kit.app   "0.1.0-SNAPSHOT"]
      [vupt/kit.async "0.1.0-SNAPSHOT"]]
