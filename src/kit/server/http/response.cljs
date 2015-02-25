@@ -1,5 +1,5 @@
-(ns common.http
-  (:require [common.gen :as gen]))
+(ns kit.server.http.response
+  (:require [kit.algo.gen :as gen]))
 
 (def restify (js/require "restify"))
 
@@ -13,8 +13,7 @@
      (ok res msg)
      (next)))
 
-(defn created
-  ([res type id]
+(defn created  ([res type id]
      (let [location (str "/" (name type) "/" id)]
        (.set res "location" location)
        (.send res 303 (js-obj "id" id "location" location))))

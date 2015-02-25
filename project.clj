@@ -5,7 +5,7 @@
      [org.clojure/core.async "0.1.338.0-5c5012-alpha"]
      [com.cemerick/piggieback "0.1.5"]
      [mocha-latte "0.1.2"]
-     [chai-latte  "0.2.0"]
+     [chai-latte  "0.2.2-SNAPSHOT"]
      [vupt/kit.core  "0.1.0-SNAPSHOT"]
      [vupt/kit.app   "0.1.0-SNAPSHOT"]
      [vupt/kit.async "0.1.0-SNAPSHOT"]]
@@ -41,6 +41,8 @@
           :output-dir     "target/test"
           :output-to      "target/test/test.js"
           :optimizations  :simple
+          :language-in :ecmascript5
+          :language-out :ecmascript5
           :cache-analysis true
           :source-map     "target/test/test.map"
           :target         :nodejs}}]})

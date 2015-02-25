@@ -1,8 +1,8 @@
 (ns kit.server.http.log
   (:require
-    [common.log :as log])
+    [kit.app.log :as log])
   (:require-macros
-    [common.macros :refer (? !)]))
+    [kit.core :refer (? !)]))
 
 (defn request [req res next]
   (log/info (? req :log)

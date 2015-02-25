@@ -3,7 +3,8 @@
   (:require
     [kit.app.component :as comp]
     [kit.app.log :as log]
-    [kit.server.rest.log :as log])
+    [kit.server.http.log :as http.log]
+    [kit.server.http.response :as resp])
   (:require-macros
     [kit.core :refer (? !)]))
 
@@ -11,7 +12,7 @@
 
 (defn panic [res]
   (-> "Internal error while handling a request"
-      (http/internal-error)
+      (resp/internal-error)
       (.send)))
 
 (defn on-error [app f]
@@ -19,21 +20,23 @@
     f))
 
 (defn log-and-panic [req res route err]
-  (log/uncaught-error req res route err)
+  (http.log/uncaught-error req res route err)
   (panic res))
 
 (defn register-middleware [app opts]
-  (doseq [mw (seq (? opts :mw :pre))]
-    (.pre mw))
-  (doseq [mw (seq (? opts :mw :post))]
-    (.on "after" mw))
-  (doseq [mw (seq (? opts :mw :route))]
-    (.use mw)))
+  (when (? opts :mw)
+    (doseq [mw (seq (? opts :mw :pre))]
+      (.pre mw))
+    (doseq [mw (seq (? opts :mw :post))]
+      (.on "after" mw))
+    (doseq [mw (seq (? opts :mw :route))]
+      (.use mw))))
 
 (defn- log-requests [app]
   (.use app (.requestLogger restify)))
 
 (defrecord RestifyServer [app opts]
+  comp/Lifecycle
   (up [_ next]
     (try
       (on-error app log-and-panic)
@@ -59,8 +62,8 @@
 
 (def query-parser (.queryParser restify))
 
-(def log-request  log/request)
-(def log-response log/response)
+(def log-request  http.log/request)
+(def log-response http.log/response)
 
 (defn server-static [server route directory]
   (.get (:app server) route
@@ -71,18 +74,18 @@
   (instance? (? restify :RestError) x)
   (instance? (? restify :HttpError) x))
 
-(defn- register-route [f route mws]
+(defn- register-route [server f route mws]
   (let [args (into-array (cons route mws))]
     (.apply f (:app server) args)))
 
 (defn get [server route & mws]
-  (register-route (? (:app server) :get) route mws))
+  (register-route server (? (:app server) :get) route mws))
 
 (defn put [server route & mws]
-  (register-route (? (:app server) :put) route mws))
+  (register-route server (? (:app server) :put) route mws))
 
 (defn post [server route & mws]
-  (register-route (? (:app server) :post) route mws))
+  (register-route server (? (:app server) :post) route mws))
 
 (defn del [server route & mws]
-  (register-route (? (:app server) :del) route mws))
+  (register-route server (? (:app server) :del) route mws))
